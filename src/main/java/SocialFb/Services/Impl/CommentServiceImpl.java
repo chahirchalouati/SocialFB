@@ -4,10 +4,11 @@ import SocialFb.DTOs.CommentDTO;
 import SocialFb.DTOs.PageDTO;
 import SocialFb.DTOs.ReactionDTO;
 import SocialFb.DTOs.ReplyDTO;
+import SocialFb.Exceptions.CustomEntityNotFoundException;
 import SocialFb.Mappers.CommentsMapper;
+import SocialFb.Mappers.ReactionMapper;
+import SocialFb.Mappers.ReplyMapper;
 import SocialFb.Models.Comment;
-import SocialFb.Models.Reaction;
-import SocialFb.Models.Reply;
 import SocialFb.Repositories.CommentsRepository;
 import SocialFb.Repositories.PostsRepository;
 import SocialFb.Requests.CommentCreateRequest;
@@ -16,7 +17,6 @@ import SocialFb.Services.CommentService;
 import SocialFb.Services.CrudBaseOperations;
 import SocialFb.Services.ReactionService;
 import SocialFb.Services.ReplyService;
-import SocialFb.Validation.CommentValidation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,18 +27,18 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, CommentCreateRequest, CommentUpdateRequest,Comment>,CommentService {
+public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, CommentCreateRequest, CommentUpdateRequest, Comment>, CommentService {
 
     private final CommentsRepository commentsRepository;
     private final ReplyService repliesService;
     private final ReactionService reactionService;
     private final PostsRepository postsRepository;
     private final CommentsMapper commentsMapper;
-    private final CommentValidation commentValidation;
+    private final ReplyMapper replyMapper;
+    private final ReactionMapper reactionMapper;
 
     @Override
     public CommentDTO create (CommentCreateRequest commentCreateRequest) {
-        this.commentValidation.validateCreateCommentRequest(commentCreateRequest);
         Comment comment = this.commentsMapper.commentCreateRequestToComment(commentCreateRequest);
         return this.commentsMapper.commentToCommentDTO(commentsRepository.save(comment));
 
@@ -46,27 +46,36 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
 
     @Override
     public Optional<Long> update (CommentUpdateRequest commentUpdateRequest) {
-        return Optional.empty();
+        var comment = this.commentsMapper.CommentUpdateRequestToComment(commentUpdateRequest);
+        return Optional.of(commentsRepository.save(comment).getId());
     }
 
     @Override
     public Optional<Long> delete (Long id) {
-        return Optional.empty();
+        if ( commentsRepository.existsById(id) ) {
+            commentsRepository.deleteById(id);
+            return Optional.of(id);
+        }
+        throw new CustomEntityNotFoundException("Comment with id = " + id + " does not exist");
     }
 
     @Override
     public List<CommentDTO> findAll () {
-        return null;
+        return this.commentsMapper.map(commentsRepository.findAll());
     }
 
     @Override
     public PageDTO<CommentDTO> findAll (Pageable pageable) {
-        return null;
+        var commentPage = this.commentsRepository.findAll(pageable);
+        return this.getPageDTO(commentPage, this.commentsMapper.map(commentPage.getContent()));
     }
 
     @Override
     public Optional<CommentDTO> findOne (Long id) {
-        return Optional.empty();
+        if ( commentsRepository.existsById(id) ) {
+            return Optional.ofNullable(this.commentsMapper.commentToCommentDTO(this.commentsRepository.findById(id).get()));
+        }
+        throw new CustomEntityNotFoundException("Comment with id = " + id + " does not exist");
     }
 
     @Override
@@ -76,13 +85,23 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
 
 
     @Override
-    public ReplyDTO addReply (Reply reply, long comment_id) {
-        return null;
+    public ReplyDTO addReply (ReplyDTO replyDTO, long comment_id) {
+        final Comment comment = this.commentsRepository.findById(comment_id)
+                .orElseThrow(() -> new CustomEntityNotFoundException("Comment with id = " + comment_id + " does not exist"));
+        comment.getReplies().add(this.replyMapper.replyDTOToReply(replyDTO));
+        final Comment saved = this.commentsRepository.save(comment);
+        replyDTO.setId(saved.getId());
+        return replyDTO;
     }
 
     @Override
-    public ReactionDTO addReaction (Reaction reaction, long comment_id) {
-        return null;
+    public ReactionDTO addReaction (ReactionDTO reactionDTO, long comment_id) {
+        final Comment comment = this.commentsRepository.findById(comment_id)
+                .orElseThrow(() -> new CustomEntityNotFoundException("Comment with id = " + comment_id + " does not exist"));
+        comment.getReactions().add(this.reactionMapper.reactionDTOToReaction(reactionDTO));
+        final Comment saved = this.commentsRepository.save(comment);
+        reactionDTO.setId(saved.getId());
+        return reactionDTO;
     }
 
     @Override

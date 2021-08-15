@@ -9,36 +9,37 @@ import SocialFb.Requests.PostCreateRequest;
 import SocialFb.Requests.PostUpdateRequest;
 import SocialFb.Services.CrudBaseOperations;
 import SocialFb.Services.PostsService;
+import SocialFb.Validation.PostValidationRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
+@Transactional
+@Slf4j
 public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateRequest, PostUpdateRequest, Post>, PostsService {
+
+    private final PostsRepository postsRepository;
+    private final PostsMapper postsMapper;
+    private final PostValidationRequest postValidationRequest;
 
     @Override
     public PageDTO<PostDTO> getPageDTO (Page<Post> all, List<PostDTO> content) {
         return CrudBaseOperations.super.getPageDTO(all, content);
     }
 
-    private final PostsRepository postsRepository;
-
-    private final PostsMapper postsMapper;
-
-
-//    public PageDTO<PostDTO> findAll (Pageable pageable) {
-//        return this.postPageSupplier(postsRepository.findAll(pageable));
-//    }
-
     private PageDTO<PostDTO> postPageSupplier (Page<Post> all) {
 
         return new PageDTO<PostDTO>()
-                .setContent(postsMapper.map(all.getContent()))
+                .setContent(this.postsMapper.map(all.getContent()))
                 .setHasContent(all.hasContent())
                 .setHasNext(all.hasNext())
                 .setHasPrevious(all.hasPrevious())
@@ -54,12 +55,24 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
 
     @Override
     public PostDTO create (PostCreateRequest postCreateRequest) {
-        return null;
+        Post post;
+        this.postValidationRequest.validateCreateRequest(postCreateRequest);
+        if ( !CollectionUtils.isEmpty(postCreateRequest.getAttachments()) ) {
+            post = this.postsMapper.postCreateRequestToPostWithAttachments(postCreateRequest);
+            this.postsRepository.save(post);
+        } else {
+            post = this.postsMapper.postCreateRequestToPost(postCreateRequest);
+            var x = this.postsRepository.save(post);
+        }
+
+        log.info("create post: {}", post);
+        return this.postsMapper.postToPostDTO(post);
     }
+
 
     @Override
     public Optional<Long> update (PostUpdateRequest postUpdateRequest) {
-    return null;
+        return null;
     }
 
     @Override
@@ -80,7 +93,6 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
 
     }
 
-
     @Override
     public Optional<PostDTO> findOne (Long id) {
         return Optional.empty();
@@ -93,23 +105,4 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
     }
 
 
-//    public Post save (Post user) {
-//        return postsRepository.save(user);
-//    }
-//
-//    public void deleteAll () {
-//        postsRepository.deleteAll();
-//    }
-//
-//    public List<Post> saveAll (Set<Post> posts) {
-//        return postsRepository.saveAll(posts);
-//    }
-//
-//    public Optional<Post> findById (Long id) {
-//        return postsRepository.findById(id);
-//    }
-//
-//    public PageDTO<PostDTO> findByUserId (Long id , Pageable pageable) {
-//        return this.postPageSupplier(postsRepository.findPostByUser_Id(id, pageable)) ;
-//    }
 }

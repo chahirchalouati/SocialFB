@@ -20,11 +20,12 @@ public class Attachment {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Enumerated
     private AttachmentType attachmentType;
 
     private String url;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     private Src src;
 
 

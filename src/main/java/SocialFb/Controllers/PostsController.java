@@ -1,17 +1,14 @@
 package SocialFb.Controllers;
 
 import SocialFb.DTOs.PostDTO;
+import SocialFb.Requests.PostCreateRequest;
 import SocialFb.Services.Impl.PostsServiceImpl;
-import SocialFb.Suppliers.PostsSupplier;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -21,8 +18,6 @@ import java.util.Optional;
 public class PostsController {
 
     private final PostsServiceImpl postsService;
-
-    private final PostsSupplier postsSupplier;
 
     @GetMapping
     public ResponseEntity<?> findAll (Pageable pageable) {
@@ -41,5 +36,10 @@ public class PostsController {
     @GetMapping("/users/{id}")
     public ResponseEntity<?> findByUserId (@PathVariable(name = "id") Long id, Pageable pageable) {
         return new ResponseEntity(postsService.findPostByUserID(id, pageable), HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity create ( PostCreateRequest postCreateRequest) {
+        return ResponseEntity.ok(this.postsService.create(postCreateRequest));
     }
 }

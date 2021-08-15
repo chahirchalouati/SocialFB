@@ -18,7 +18,6 @@ public class CommentsController {
     private final CommentServiceImpl commentService;
 
     @GetMapping
-    @Cacheable({"comments"})
     public ResponseEntity<?> findAll (Pageable pageable) throws InterruptedException {
         return new ResponseEntity<>(commentService.findAll(pageable), HttpStatus.OK);
     }
@@ -33,7 +32,7 @@ public class CommentsController {
         return new ResponseEntity<>(commentService.create(commentCreateRequest), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PutMapping
     public ResponseEntity<?> update (@RequestBody CommentUpdateRequest commentUpdateRequest) {
         return new ResponseEntity<>(commentService.update(commentUpdateRequest), HttpStatus.OK);
     }

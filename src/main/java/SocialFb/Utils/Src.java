@@ -1,6 +1,7 @@
 package SocialFb.Utils;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
+@Builder
 public class Src {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

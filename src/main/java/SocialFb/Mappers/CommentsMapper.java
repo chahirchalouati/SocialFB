@@ -28,8 +28,6 @@ public interface CommentsMapper {
     @Mappings({
             @Mapping(target = "content", source = "content"),
             @Mapping(target = "post.id", source = "post_id"),
-            @Mapping(target = "replies", source = "replies"),
-            @Mapping(target = "reactions", source = "reactions"),
     })
     Comment commentCreateRequestToComment (CommentCreateRequest commentCreateRequest);
 

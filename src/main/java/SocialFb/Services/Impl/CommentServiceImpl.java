@@ -9,6 +9,7 @@ import SocialFb.Mappers.CommentsMapper;
 import SocialFb.Mappers.ReactionMapper;
 import SocialFb.Mappers.ReplyMapper;
 import SocialFb.Models.Comment;
+import SocialFb.Models.Post;
 import SocialFb.Repositories.CommentsRepository;
 import SocialFb.Repositories.PostsRepository;
 import SocialFb.Requests.CommentCreateRequest;
@@ -39,14 +40,17 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
 
     @Override
     public CommentDTO create (CommentCreateRequest commentCreateRequest) {
-        Comment comment = this.commentsMapper.commentCreateRequestToComment(commentCreateRequest);
+        final Comment comment = this.commentsMapper.commentCreateRequestToComment(commentCreateRequest);
+        final Post post = postsRepository.findById(commentCreateRequest.getPost_id())
+                .orElseThrow(() -> new CustomEntityNotFoundException("Post with id = " + commentCreateRequest.getPost_id() + " does not exist"));
+        comment.setPost(post);
         return this.commentsMapper.commentToCommentDTO(commentsRepository.save(comment));
 
     }
 
     @Override
     public Optional<Long> update (CommentUpdateRequest commentUpdateRequest) {
-        var comment = this.commentsMapper.CommentUpdateRequestToComment(commentUpdateRequest);
+        final Comment comment = this.commentsMapper.CommentUpdateRequestToComment(commentUpdateRequest);
         return Optional.of(commentsRepository.save(comment).getId());
     }
 
@@ -66,7 +70,7 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
 
     @Override
     public PageDTO<CommentDTO> findAll (Pageable pageable) {
-        var commentPage = this.commentsRepository.findAll(pageable);
+        final Page<Comment> commentPage = this.commentsRepository.findAll(pageable);
         return this.getPageDTO(commentPage, this.commentsMapper.map(commentPage.getContent()));
     }
 
@@ -106,7 +110,7 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
 
     @Override
     public PageDTO<CommentDTO> findByPostId (Long id, Pageable pageable) {
-        var pageComments = commentsRepository.findByPost_Id(id, pageable);
+        final Page<Comment> pageComments = commentsRepository.findByPost_Id(id, pageable);
         return this.getPageDTO(pageComments, commentsMapper.map(pageComments.getContent()));
     }
 }

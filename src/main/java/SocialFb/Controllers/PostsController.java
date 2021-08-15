@@ -25,7 +25,6 @@ public class PostsController {
     private final PostsSupplier postsSupplier;
 
     @GetMapping
-    @Cacheable({"posts"})
     public ResponseEntity<?> findAll (Pageable pageable) {
         return new ResponseEntity(postsService.findAll(pageable), HttpStatus.OK);
     }

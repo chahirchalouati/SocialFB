@@ -2,7 +2,7 @@ package SocialFb.Mappers;
 
 import SocialFb.DTOs.CommentDTO;
 import SocialFb.Models.Comment;
-import SocialFb.Requests.CreateCommentRequest;
+import SocialFb.Requests.CommentCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -26,9 +26,9 @@ public interface CommentsMapper {
 
     @Mappings({
             @Mapping(target = "content", source = "content"),
-            @Mapping(target = "post", source = "post"),
+            @Mapping(target = "post.id", source = "post_id"),
             @Mapping(target = "replies", source = "replies"),
             @Mapping(target = "reactions", source = "reactions"),
     })
-    Comment createCommentRequestToComment (CreateCommentRequest commentRequest);
+    Comment commentCreateRequestToComment (CommentCreateRequest commentCreateRequest);
 }

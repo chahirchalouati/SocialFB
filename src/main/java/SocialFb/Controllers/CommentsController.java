@@ -2,6 +2,7 @@ package SocialFb.Controllers;
 
 import SocialFb.Repositories.PostsRepository;
 import SocialFb.Services.CommentService;
+import SocialFb.Services.Impl.CommentServiceImpl;
 import SocialFb.Suppliers.CommentsSupplier;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CommentsController {
 
-    private final CommentService commentService;
-    private final CommentsSupplier commentsSupplier;
-    private final PostsRepository postsRepository;
+    private final CommentServiceImpl commentService;
+//    private final CommentsSupplier commentsSupplier;
+//    private final PostsRepository postsRepository;
 
     @GetMapping
     @Cacheable({"comments"})
@@ -30,9 +31,8 @@ public class CommentsController {
 
 
     @GetMapping("/{id}")
-    @Cacheable(value = "comment.findById", key = "id")
     public ResponseEntity<?> findById (@PathVariable(name = "id") Long id, Pageable pageable) {
-        return new ResponseEntity<>(commentService.findByPost_Id(id, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findByPostId(id, pageable), HttpStatus.OK);
     }
 
 

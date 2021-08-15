@@ -2,19 +2,17 @@ package SocialFb.Services;
 
 import SocialFb.DTOs.CommentDTO;
 import SocialFb.DTOs.PageDTO;
-import SocialFb.Requests.CreateCommentRequest;
-import SocialFb.Requests.UpdateCommentRequest;
+import SocialFb.DTOs.ReactionDTO;
+import SocialFb.DTOs.ReplyDTO;
+import SocialFb.Models.Reaction;
+import SocialFb.Models.Reply;
 import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
 
-    PageDTO<CommentDTO> findByPost_Id (Long id, Pageable pageable);
+    ReplyDTO addReply (Reply reply, long comment_id);
 
-    PageDTO<CommentDTO> findAll (Pageable pageable);
+    ReactionDTO addReaction (Reaction reaction, long comment_id);
 
-    CommentDTO create (CreateCommentRequest createCommentRequest);
-
-    CommentDTO deleteOne (long commentId);
-
-    CommentDTO updateOne (UpdateCommentRequest updateCommentRequest);
+    PageDTO<CommentDTO> findByPostId (Long id, Pageable pageable);
 }

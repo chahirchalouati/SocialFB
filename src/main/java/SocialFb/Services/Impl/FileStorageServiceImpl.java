@@ -2,8 +2,10 @@ package SocialFb.Services.Impl;
 
 import SocialFb.Exceptions.ResourceNotFoundException;
 import SocialFb.Models.FileDetails;
+import SocialFb.Models.ResizeDetails;
 import SocialFb.Providers.FileProperties;
 import SocialFb.Services.FileStorageService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -25,7 +28,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class FileStorageServiceImpl implements FileStorageService {
-
+    @Getter
     private final String FILE_STORE_LOCATION;
 
 
@@ -56,6 +59,11 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     }
 
+    public void storeResizedImage (List<ResizeDetails> resizeDetails) {
+      resizeDetails.stream().forEach(System.out::println);
+    }
+
+
     private void copyFile (MultipartFile multipartFile, Path filePath) {
         try {
             this.createLocalStore();
@@ -79,13 +87,14 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    private Path getFilePath (String filename) {
+    public Path getFilePath (String filename) {
 
         return Paths
                 .get(this.getRelativePath(filename))
                 .normalize()
                 .toAbsolutePath();
     }
+
 
     @NotNull
     private String getRelativePath (String filename) {

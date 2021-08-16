@@ -4,7 +4,6 @@ import SocialFb.Requests.CommentCreateRequest;
 import SocialFb.Requests.CommentUpdateRequest;
 import SocialFb.Services.Impl.CommentServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

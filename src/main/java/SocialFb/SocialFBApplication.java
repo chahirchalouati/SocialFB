@@ -2,6 +2,7 @@ package SocialFb;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,8 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableCaching
 @AllArgsConstructor
 public class SocialFBApplication {
-//
-//    private final MediaProvider mediaProvider;
+
 
 
     public static void main (String[] args) {
@@ -27,7 +27,7 @@ public class SocialFBApplication {
     public WebMvcConfigurer corsConfigurer () {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings (CorsRegistry registry) {
+            public void addCorsMappings (@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE");

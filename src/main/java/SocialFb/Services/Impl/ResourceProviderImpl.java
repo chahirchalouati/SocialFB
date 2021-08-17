@@ -2,8 +2,7 @@ package SocialFb.Services.Impl;
 
 import SocialFb.Exceptions.ResourceNotFoundException;
 import SocialFb.Helpers.PathHelper;
-import SocialFb.Models.FileDetails;
-import SocialFb.Services.FileSupplierService;
+import SocialFb.Services.ResourceProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -21,7 +20,7 @@ import java.nio.file.Paths;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class FileSupplierServiceImpl implements FileSupplierService {
+public class ResourceProviderImpl implements ResourceProvider {
    private final  PathHelper pathHelper;
     @Override
     public Resource getResource (String filename) {

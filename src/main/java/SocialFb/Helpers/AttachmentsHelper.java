@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @AllArgsConstructor
 public class AttachmentsHelper {
     private final SrcHelper srcHelper;
-    ;
 
     public Attachment buildAttachments (List<FileDetails> fileDetails) {
 

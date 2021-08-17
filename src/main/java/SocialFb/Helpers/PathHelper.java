@@ -1,6 +1,6 @@
 package SocialFb.Helpers;
 
-import SocialFb.Providers.FileProperties;
+import SocialFb.Utils.FileProperties;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ public class PathHelper {
     private final String FILE_STORE_LOCATION;
 
     public PathHelper (@Autowired FileProperties fileProperties) {
-        this.FILE_STORE_LOCATION = fileProperties.getFileStoreLocation().trim().toLowerCase(Locale.ROOT);;
+        this.FILE_STORE_LOCATION = fileProperties.getFileStoreLocation().trim().toLowerCase(Locale.ROOT);
     }
 
     public Path getFilePath (String filename) {

@@ -1,4 +1,4 @@
-package SocialFb.Providers;
+package SocialFb.Utils;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

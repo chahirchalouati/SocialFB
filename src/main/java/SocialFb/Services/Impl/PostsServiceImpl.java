@@ -12,12 +12,14 @@ import SocialFb.Services.PostsService;
 import SocialFb.Validation.PostValidationRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,18 +60,20 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
 
         Post post;
         this.postValidationRequest.validateCreateRequest(postCreateRequest);
-        if ( !CollectionUtils.isEmpty(postCreateRequest.getAttachments()) ) {
+        if ( this.validateAttachmentsSize(postCreateRequest.getAttachments())) {
             post = this.postsMapper.postCreateRequestToPostWithAttachments(postCreateRequest);
-            this.postsRepository.save(post);
         } else {
             post = this.postsMapper.postCreateRequestToPost(postCreateRequest);
-            var x = this.postsRepository.save(post);
         }
-
+        this.postsRepository.save(post);
         log.info("create post: {}", post);
         return this.postsMapper.postToPostDTO(post);
     }
 
+    private boolean validateAttachmentsSize (MultipartFile[] attachments) {
+        return ArrayUtils.isNotEmpty(attachments);
+
+    }
 
     @Override
     public Optional<Long> update (PostUpdateRequest postUpdateRequest) {

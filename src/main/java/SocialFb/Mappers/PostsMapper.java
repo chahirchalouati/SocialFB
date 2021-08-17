@@ -32,7 +32,7 @@ public abstract class PostsMapper {
     public abstract List<PostDTO> map (List<Post> posts);
     @Mappings({
             @Mapping(target = "content", source = "content"),
-            @Mapping(target = "attachments", expression = "java(this.fileStorageService.storeFiles(postCreateRequest.getAttachments()))"),
+            @Mapping(target = "attachments", expression = "java(this.fileStorageService.storeFiles(postCreateRequest.getAttachmentsAsList()))"),
     })
 
     public abstract Post  postCreateRequestToPostWithAttachments(PostCreateRequest postCreateRequest);

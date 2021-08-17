@@ -8,6 +8,7 @@ import SocialFb.Models.Size;
 import SocialFb.Services.FileStorageService;
 import SocialFb.Utils.FileProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,8 +74,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    public Set<Attachment> storeFiles (List<MultipartFile> files) {
+    public Set<Attachment> storeFiles (Collection<MultipartFile> files) {
         return files.stream()
+                .filter(file -> !StringUtils.isBlank(file.getOriginalFilename()) && !StringUtils.isEmpty(file.getOriginalFilename()))
                 .map(this::storeFile)
                 .map(this.attachmentsHelper::buildAttachments)
                 .collect(Collectors.toSet());
@@ -111,7 +113,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         return MessageFormat.format("{0}{1}{2}", UUID.randomUUID(), ".", Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[1]);
     }
-
 
 
     @Override

@@ -19,7 +19,7 @@ public interface FileStorageService {
 
     List<FileDetails> storeFile (MultipartFile multipartFile);
 
-    Resource getResource (FileDetails fileDetails);
+
 
     List<FileDetails> storeResisedImages (MultipartFile multipartFile);
 

@@ -116,16 +116,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         return MessageFormat.format("{0}{1}{2}", UUID.randomUUID(), ".", Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[1]);
     }
 
-    @Override
-    public Resource getResource (FileDetails fileDetails) {
-        Path path = Paths.get(fileDetails.getPath()).normalize().toAbsolutePath();
-        try {
-            return new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
-            throw new ResourceNotFoundException(fileDetails.getName().concat(" does not exist ."));
-        }
 
-    }
 
     @Override
     public List<FileDetails> storeResisedImages (MultipartFile multipartFile) {

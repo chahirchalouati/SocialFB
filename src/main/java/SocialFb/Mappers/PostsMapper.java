@@ -1,9 +1,9 @@
 package SocialFb.Mappers;
 
 import SocialFb.DTOs.PostDTO;
-import SocialFb.Helpers.PostBuildHelper;
 import SocialFb.Models.Post;
 import SocialFb.Requests.PostCreateRequest;
+import SocialFb.Services.Impl.FileStorageServiceImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -14,7 +14,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class PostsMapper {
     @Autowired
-    PostBuildHelper postBuildHelper;
+    FileStorageServiceImpl fileStorageService;
+
     @Mappings({
             @Mapping(target = "user", source = "user"),
             @Mapping(target = "user.fullName", expression = "java(user.getFirstName() + \" \" + user.getLastName())"),
@@ -31,7 +32,7 @@ public abstract class PostsMapper {
     public abstract List<PostDTO> map (List<Post> posts);
     @Mappings({
             @Mapping(target = "content", source = "content"),
-            @Mapping(target = "attachments", expression = "java(this.postBuildHelper.getAttachmentSet(this.postBuildHelper.getFileDetails(postCreateRequest)))"),
+            @Mapping(target = "attachments", expression = "java(this.fileStorageService.storeFiles(postCreateRequest.getAttachments()))"),
     })
 
     public abstract Post  postCreateRequestToPostWithAttachments(PostCreateRequest postCreateRequest);

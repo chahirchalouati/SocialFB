@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 
 @Builder
 @Data
@@ -12,6 +13,6 @@ class ResizeDetails {
     private InputStream inputStream;
     private int width;
     private int height;
-    private String filePath;
+    private Path filePath;
     private String extension;
 }

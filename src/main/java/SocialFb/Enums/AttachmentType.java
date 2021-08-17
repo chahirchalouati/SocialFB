@@ -1,6 +1,6 @@
 package SocialFb.Enums;
 
 public enum AttachmentType {
-    IMAGE,VIDEO,FILE,UNDEFINED;
+    IMAGE,VIDEO,FILE, PDF;
 
 }

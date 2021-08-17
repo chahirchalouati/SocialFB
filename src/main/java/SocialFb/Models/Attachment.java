@@ -1,7 +1,7 @@
 package SocialFb.Models;
 
 import SocialFb.Enums.AttachmentType;
-import SocialFb.Utils.Src;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +23,7 @@ public class Attachment {
     @Enumerated
     private AttachmentType attachmentType;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String url;
 
     @ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource(value = "classpath*:files.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "classpath:files.properties", ignoreResourceNotFound = true)
 @Data
 public class FileProperties {
 

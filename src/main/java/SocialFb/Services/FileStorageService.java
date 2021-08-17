@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 public interface FileStorageService {
@@ -16,7 +17,15 @@ public interface FileStorageService {
         Files.createDirectories(Paths.get(storeLocation).toAbsolutePath().normalize());
     }
 
-    FileDetails storeFile (MultipartFile multipartFile);
+    List<FileDetails> storeFile (MultipartFile multipartFile);
 
     Resource getResource (FileDetails fileDetails);
+
+    List<FileDetails> storeResisedImages (MultipartFile multipartFile);
+
+    List<FileDetails>  storeImage (MultipartFile multipartFile);
+
+    List<FileDetails>  storeVideo (MultipartFile multipartFile);
+
+    List<FileDetails>  storeOtherFile (MultipartFile multipartFile);
 }

@@ -1,5 +1,6 @@
 package SocialFb.Utils;
 
+import SocialFb.Models.Src;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;

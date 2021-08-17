@@ -1,7 +1,6 @@
 package SocialFb.Models;
 
 import SocialFb.Enums.ContentMediaType;
-import SocialFb.Utils.Src;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

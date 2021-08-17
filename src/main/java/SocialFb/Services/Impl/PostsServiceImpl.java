@@ -55,6 +55,7 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
 
     @Override
     public PostDTO create (PostCreateRequest postCreateRequest) {
+
         Post post;
         this.postValidationRequest.validateCreateRequest(postCreateRequest);
         if ( !CollectionUtils.isEmpty(postCreateRequest.getAttachments()) ) {

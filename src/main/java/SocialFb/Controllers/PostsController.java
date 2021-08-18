@@ -26,7 +26,7 @@ public class PostsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById (@PathVariable(name = "id") Long id) {
-        Optional<PostDTO> post = postsService.findOne(id);
+        Optional<PostDTO> post = postsService.findById(id);
         if ( post.isEmpty() ) {
             return new ResponseEntity(id, HttpStatus.NOT_FOUND);
         }

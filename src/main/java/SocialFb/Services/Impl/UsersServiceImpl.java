@@ -2,6 +2,7 @@ package SocialFb.Services.Impl;
 
 import SocialFb.DTOs.PageDTO;
 import SocialFb.DTOs.UserDTO;
+import SocialFb.Exceptions.CustomEntityNotFoundException;
 import SocialFb.Mappers.UserMapper;
 import SocialFb.Models.User;
 import SocialFb.Repositories.UsersRepository;
@@ -9,11 +10,13 @@ import SocialFb.Requests.UserCreateRequest;
 import SocialFb.Requests.UserUpdateRequest;
 import SocialFb.Services.CrudBaseOperations;
 import SocialFb.Services.UsersService;
+import SocialFb.Suppliers.UsersSupplier;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,7 @@ public class UsersServiceImpl implements CrudBaseOperations<UserDTO, UserCreateR
 
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
+    private final UsersSupplier usersSupplier;
 
 
     @Override
@@ -37,22 +41,28 @@ public class UsersServiceImpl implements CrudBaseOperations<UserDTO, UserCreateR
 
     @Override
     public Optional<Long> delete (Long id) {
-        return Optional.empty();
+        var user = usersRepository.findById(id)
+                .orElseThrow(() -> new CustomEntityNotFoundException(String.format("user with id : %s does not exist", id)));
+        usersRepository.delete(user);
+        return Optional.of(user.getId());
     }
 
     @Override
     public List<UserDTO> findAll () {
-        return null;
+        return userMapper.map(usersRepository.findAll());
     }
 
     @Override
     public PageDTO<UserDTO> findAll (Pageable pageable) {
-        return null;
+        final Page<User> all = usersRepository.findAll(pageable);
+        return this.getPageDTO(all, userMapper.map(all.getContent()));
     }
 
     @Override
-    public Optional<UserDTO> findOne (Long id) {
-        return Optional.empty();
+    public Optional<UserDTO> findById (Long id) {
+        var user = usersRepository.findById(id)
+                .orElseThrow(() -> new CustomEntityNotFoundException(String.format("user with id : %s does not exist", id)));
+        return Optional.of(userMapper.userToUserDTO(user));
     }
 
     @Override

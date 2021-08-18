@@ -18,7 +18,7 @@ public interface CrudBaseOperations<A, B, C,D> {
 
     PageDTO<A> findAll (Pageable pageable);
 
-    Optional<A> findOne (Long id);
+    Optional<A> findById (Long id);
 
 
     default  PageDTO<A> getPageDTO (Page<D> all, List<A> content) {

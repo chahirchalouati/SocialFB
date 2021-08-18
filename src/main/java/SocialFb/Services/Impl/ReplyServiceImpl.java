@@ -44,7 +44,7 @@ public class ReplyServiceImpl implements CrudBaseOperations<ReplyDTO, ReplyCreat
     }
 
     @Override
-    public Optional<ReplyDTO> findOne (Long id) {
+    public Optional<ReplyDTO> findById (Long id) {
         return Optional.empty();
     }
 

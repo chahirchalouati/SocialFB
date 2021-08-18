@@ -2,7 +2,6 @@ package SocialFb.Controllers;
 
 import SocialFb.Services.Impl.ResourceProviderImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;

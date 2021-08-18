@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CrudBaseOperations<CommentDTO, Commen
     }
 
     @Override
-    public Optional<CommentDTO> findOne (Long id) {
+    public Optional<CommentDTO> findById (Long id) {
         if ( commentsRepository.existsById(id) ) {
             return Optional.ofNullable(this.commentsMapper.commentToCommentDTO(this.commentsRepository.findById(id).get()));
         }

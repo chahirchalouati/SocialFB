@@ -9,6 +9,7 @@ import SocialFb.Requests.PostCreateRequest;
 import SocialFb.Requests.PostUpdateRequest;
 import SocialFb.Services.CrudBaseOperations;
 import SocialFb.Services.PostsService;
+import SocialFb.Utils.FileProperties;
 import SocialFb.Validation.PostValidationRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +60,9 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
 
         Post post;
         this.postValidationRequest.validateCreateRequest(postCreateRequest);
-        if ( this.validateAttachmentsSize(postCreateRequest.getAttachments())) {
-            post = this.postsMapper.postCreateRequestToPostWithAttachments(postCreateRequest);
+       if ( this.validateAttachmentsSize(postCreateRequest.getAttachments())) {
+           postCreateRequest.getAttachmentsAsList().forEach(multipartFile ->FileProperties.validateFileFormat(multipartFile.getOriginalFilename()) );
+           post = this.postsMapper.postCreateRequestToPostWithAttachments(postCreateRequest);
         } else {
             post = this.postsMapper.postCreateRequestToPost(postCreateRequest);
         }
@@ -99,7 +100,7 @@ public class PostsServiceImpl implements CrudBaseOperations<PostDTO, PostCreateR
     }
 
     @Override
-    public Optional<PostDTO> findOne (Long id) {
+    public Optional<PostDTO> findById (Long id) {
         return Optional.empty();
     }
 

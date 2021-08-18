@@ -24,16 +24,11 @@ import java.util.Objects;
 public class ImageResizeHelper {
     @SneakyThrows(IOException.class)
     public void imageResizer (MultipartFile multipartFile, Size size, Path filePath) {
-        String s = multipartFile.getOriginalFilename().split("\\.")[1];
+        String s = Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[1];
         if ( Objects.isNull(s) ) {
             throw new FileOperationException(String.format("please provide file extension for filename : %s size : %s", multipartFile.getOriginalFilename(), size));
         }
         ImageValidation.validateDimensions(size.width(), size.height());
-        Thumbnails
-                .of(multipartFile.getInputStream())
-                .outputFormat(s)
-                .size(size.height(), size.width())
-                .toFile(filePath.toString());
-
+        Thumbnails.of(multipartFile.getInputStream()).outputFormat(s).size(size.height(), size.width()).toFile(filePath.toString());
     }
 }

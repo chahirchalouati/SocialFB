@@ -52,7 +52,7 @@ public class ReactionServiceImpl implements CrudBaseOperations<ReactionDTO, Reac
     }
 
     @Override
-    public Optional<ReactionDTO> findOne (Long id) {
+    public Optional<ReactionDTO> findById (Long id) {
         return Optional.empty();
     }
 
